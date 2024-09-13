@@ -1,10 +1,10 @@
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import React, { useEffect } from "react";
-import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, removeUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
 import { LOGO } from "../utils/constants";
+import { auth } from "../utils/firebase";
+import { addUser, removeUser } from "../utils/userSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -17,8 +17,9 @@ const Header = () => {
         navigate("/error");
       });
   };
+
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, email, displayName, photoURL } = user;
         dispatch(
@@ -36,19 +37,17 @@ const Header = () => {
       }
     });
 
-    //Unsubscribe when component mounts
-    return () => unSubscribe();
+    // Unsiubscribe when component unmounts
+    return () => unsubscribe();
   }, []);
+
   return (
-    <div className="absolute   w-full px-8 py-2 bg-gradient-to-b from-black z-10 flex justify-between">
+    <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex justify-between">
       <img className="w-44" src={LOGO} alt="logo" />
       {user && (
         <div className="flex p-2">
-          <img className="w-12 h-12 " alt="userIcon" src={user?.photoURL} />
-          <button
-            onClick={handleSignOut}
-            className="font-bold text-white first-line:"
-          >
+          <img className="w-12 h-12" alt="usericon" src={user?.photoURL} />
+          <button onClick={handleSignOut} className="font-bold text-white ">
             (Sign Out)
           </button>
         </div>
@@ -56,5 +55,4 @@ const Header = () => {
     </div>
   );
 };
-
 export default Header;
