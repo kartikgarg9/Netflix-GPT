@@ -54,8 +54,8 @@ const Header = () => {
   };
 
   return (
-    <div className="relative w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex justify-between">
-      <img className="w-44" src={LOGO} alt="logo" />
+    <div className="fixed w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex justify-between">
+      <img className="w-32" src={LOGO} alt="logo" />
       {user && (
         <div className="flex p-2">
           {showGptSearch && (
