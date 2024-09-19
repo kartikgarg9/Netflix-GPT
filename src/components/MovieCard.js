@@ -1,7 +1,17 @@
 import { Link } from "react-router-dom";
 import { IMG_CDN_URL } from "../utils/constants";
+import Skeleton from "react-loading-skeleton"; // Import Skeleton
+import "react-loading-skeleton/dist/skeleton.css"; // Import skeleton CSS
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, isLoading }) => {
+  if (isLoading) {
+    return (
+      <div className="w-36 md:w-48 pr-4">
+        <Skeleton height={240} width="100%" borderRadius={8} />
+      </div>
+    );
+  }
+
   if (!movie.poster_path) return null;
 
   return (
