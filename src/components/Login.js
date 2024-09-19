@@ -25,73 +25,79 @@ const Login = () => {
     setIsSignInForm(!isSignInForm);
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     const message = checkValidData(email.current.value, password.current.value);
-
     setErrorMessage(message);
 
     if (message) return;
 
-    //sign in/up
-    if (!isSignInForm) {
-      //Sign Up
-      createUserWithEmailAndPassword(
-        auth,
-        email.current.value,
-        password.current.value
-      )
-        .then((userCredential) => {
-          // Signed up
-          const user = userCredential.user;
-          updateProfile(user, {
-            displayName: name.current.value,
-            photoURL: USER_AVATAR,
+    try {
+      if (!isSignInForm) {
+        // Sign Up
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        );
+        const user = userCredential.user;
+        await updateProfile(user, {
+          displayName: name.current.value,
+          photoURL: USER_AVATAR,
+        });
+        const { uid, email, displayName, photoURL } = auth.currentUser;
+        dispatch(
+          addUser({
+            uid: uid,
+            email: email,
+            displayName: displayName,
+            photoURL: photoURL,
           })
-            .then(() => {
-              const { uid, email, displayName, photoURL } = auth.currentUser;
-              dispatch(
-                addUser({
-                  uid: uid,
-                  email: email,
-                  displayName: displayName,
-                  photoURL: photoURL,
-                })
-              );
-            })
-            .catch((error) => {
-              setErrorMessage(error.message);
-            });
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setErrorMessage(errorCode + "-" + errorMessage);
-        });
-    } else {
-      //Sign In
-      signInWithEmailAndPassword(
-        auth,
-        email.current.value,
-        password.current.value
-      )
-        .then((userCredential) => {
-          // Signed in
-          // eslint-disable-next-line no-unused-vars
-          const user = userCredential.user;
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setErrorMessage(errorCode + "-" + errorMessage);
-        });
+        );
+      } else {
+        // Sign In
+        await signInWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        );
+      }
+    } catch (error) {
+      console.error("Firebase Error: ", error); // Log error details for debugging
+
+      let errorMessage;
+
+      switch (error.code) {
+        case "auth/invalid-email":
+          errorMessage =
+            "The email address is not valid. Please enter a valid email address.";
+          break;
+        case "auth/user-not-found":
+          errorMessage = "Account not found. Please sign up first.";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password. Please try again.";
+          break;
+        case "auth/invalid-credential":
+          errorMessage = "Invalid credentials. Please check your input.";
+          break;
+        case "auth/too-many-requests":
+          errorMessage = "Too many requests. Please try again later.";
+          break;
+        default:
+          errorMessage = "Sign In failed. Please try again.";
+          break;
+      }
+
+      setErrorMessage(errorMessage);
     }
   };
+
   return (
     <div>
       <Header />
       <div className="absolute">
         <img
-          className=" h-screen object-cover md:h-auto"
+          className="h-screen object-cover md:h-auto"
           src={BG_URL}
           alt="logo"
         />
@@ -114,27 +120,26 @@ const Login = () => {
         <input
           ref={email}
           type="text"
-          placeholder="Email Adress"
+          placeholder="Email Address"
           className="p-4 my-4 w-full bg-gray-700"
         />
-
         <input
           ref={password}
           type="password"
-          placeholder="password"
+          placeholder="Password"
           className="p-4 my-4 w-full bg-gray-700"
         />
         <p className="text-red-500">{errorMessage}</p>
         <button
-          className="p-2 my-4 bg-red-700 w-full rounded-lg  "
+          className="p-2 my-4 bg-red-700 w-full rounded-lg"
           onClick={handleButtonClick}
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
           {isSignInForm
-            ? "New to Netfix ? Sign Up Now"
-            : "Already registered? Sign In Now "}
+            ? "New to Netfix? Sign Up Now"
+            : "Already registered? Sign In Now"}
         </p>
       </form>
     </div>
