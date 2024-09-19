@@ -56,41 +56,58 @@ const Header = () => {
   };
 
   return (
-    <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex flex-col md:flex-row justify-between">
-      <img className="w-44 mx-auto md:mx-0" src={LOGO} alt="logo" />
-      {user && (
-        <div className="flex p-2 justify-between">
-          {showGptSearch && (
-            <select
-              className="p-2 m-2 bg-gray-900 text-white"
-              onChange={handleLanguageChange}
-            >
-              {SUPPORTED_LANGUAGES.map((lang) => (
-                <option key={lang.identifier} value={lang.identifier}>
-                  {lang.name}
-                </option>
-              ))}
-            </select>
-          )}
-          <button
-            className="py-2 px-4 my-2 text-white bg-purple-800 rounded-lg"
-            onClick={handleGptSearchClick}
-          >
-            {showGptSearch ? "Homepage" : "GPT search"}
-          </button>
-          {user.photoURL && (
-            <img
-              className="hidden md:block w-12 h-12"
-              alt="usericon"
-              src={user.photoURL}
-            />
-          )}
-          <button onClick={handleSignOut} className="font-bold text-white">
-            Sign Out
-          </button>
+    <header className="absolute w-screen bg-gradient-to-b from-black px-8 py-4 z-10">
+      <div className="flex flex-col md:flex-row items-center justify-between">
+        {/* Logo Section */}
+        <div className="flex items-center mb-4 md:mb-0">
+          <img className="w-36 md:w-48" src={LOGO} alt="logo" />
         </div>
-      )}
-    </div>
+
+        {/* User Section */}
+        {user && (
+          <div className="flex items-center justify-between space-x-4 md:space-x-6">
+            {/* Language Selector */}
+            {showGptSearch && (
+              <select
+                className="p-2 bg-gray-900 text-white rounded-lg"
+                onChange={handleLanguageChange}
+              >
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <option key={lang.identifier} value={lang.identifier}>
+                    {lang.name}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {/* GPT Search/Homepage Button */}
+            <button
+              className="py-2 px-4 bg-purple-700 text-white rounded-lg font-semibold hover:bg-purple-600 transition"
+              onClick={handleGptSearchClick}
+            >
+              {showGptSearch ? "Homepage" : "GPT Search"}
+            </button>
+
+            {/* User Profile Icon */}
+            {user.photoURL && (
+              <img
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gray-200"
+                alt="User Icon"
+                src={user.photoURL}
+              />
+            )}
+
+            {/* Sign Out Button */}
+            <button
+              onClick={handleSignOut}
+              className="py-2 px-4 bg-red-600 text-white font-bold rounded-lg hover:bg-red-500 transition"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
+      </div>
+    </header>
   );
 };
 
