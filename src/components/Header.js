@@ -13,13 +13,6 @@ const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {})
-      .catch((error) => {
-        navigate("/error");
-      });
-  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -40,13 +33,21 @@ const Header = () => {
       }
     });
 
-    // Unsiubscribe when component unmounts
     return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, navigate]);
+
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Sign out error:", error);
+        navigate("/error");
+      });
+  };
 
   const handleGptSearchClick = () => {
-    //Toggle GPT Search
     dispatch(toggleGptSearchView());
   };
 
@@ -77,17 +78,20 @@ const Header = () => {
           >
             {showGptSearch ? "Homepage" : "GPT search"}
           </button>
-          <img
-            className="hidden md:block  w-12 h-12"
-            alt="usericon"
-            src={user?.photoURL}
-          />
-          <button onClick={handleSignOut} className="font-bold text-white ">
-            (Sign Out)
+          {user.photoURL && (
+            <img
+              className="hidden md:block w-12 h-12"
+              alt="usericon"
+              src={user.photoURL}
+            />
+          )}
+          <button onClick={handleSignOut} className="font-bold text-white">
+            Sign Out
           </button>
         </div>
       )}
     </div>
   );
 };
+
 export default Header;

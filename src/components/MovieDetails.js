@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { API_OPTIONS, IMG_CDN_URL } from "../utils/constants"; // Import your constants for API options and image CDN URL
+import { API_OPTIONS } from "../utils/constants"; // Import your constants for API options
+import SkeletonMovieDetail from "./SkeletonMovieDetail"; // Import the skeleton component
 
 const MovieDetail = () => {
   const { id } = useParams(); // Get the movie ID from the URL
@@ -34,8 +35,6 @@ const MovieDetail = () => {
         API_OPTIONS
       );
       const data = await response.json();
-      console.log("Movie video response:", data); // Log the API response
-
       const trailer = data.results.find(
         (video) =>
           video.type === "Trailer" ||
@@ -55,7 +54,7 @@ const MovieDetail = () => {
     }
   };
 
-  if (!movie) return <p>Loading...</p>;
+  if (!movie) return <SkeletonMovieDetail />; // Show the skeleton while loading
 
   return (
     <div className="relative h-screen overflow-hidden">
