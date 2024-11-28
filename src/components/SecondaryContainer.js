@@ -29,7 +29,7 @@ const SecondaryContainer = () => {
         />
         <MovieList
           title={"Trending"}
-          movies={movies.nowPlayingMovies} // Update if necessary
+          movies={movies.trendingMovies} // Update if necessary
           onMovieClick={handleMovieClick}
           isLoading={isLoading}
         />
@@ -41,7 +41,7 @@ const SecondaryContainer = () => {
         />
         <MovieList
           title={"Upcoming"}
-          movies={movies.nowPlayingMovies} // Update if necessary
+          movies={movies.upcomingMovies} // Update if necessary
           onMovieClick={handleMovieClick}
           isLoading={isLoading}
         />

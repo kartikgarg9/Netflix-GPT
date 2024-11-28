@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import useNowPlayingMovies from "../hooks/useNowPlayingMovies";
 import usePopularMovies from "../hooks/usePopularMovies";
+import useTrendingMovies from "../hooks/useTrendingMovies";
 import VideoBackground from "./VideoBackground";
 import VideoTitle from "./VideoTitle";
 import SkeletonVideoBackground from "./SkeletonVideoBackground";
+import useUpcomingMovies from "../hooks/useUpcomingMovies";
 
 const MainContainer = () => {
   const movies = useSelector((store) => store.movies?.nowPlayingMovies);
@@ -12,7 +14,8 @@ const MainContainer = () => {
 
   useNowPlayingMovies();
   usePopularMovies();
-
+  useTrendingMovies();
+  useUpcomingMovies();
   useEffect(() => {
     // Simulate loading time or fetch actual data to determine when loading is done
     const timer = setTimeout(() => setIsLoading(false), 2000); // Example delay
